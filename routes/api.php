@@ -18,6 +18,7 @@ Route::get('/orders/activeorders','App\Http\Controllers\Api\OrderController@acti
 Route::get('/orders/activeorderstore/{store_id}','App\Http\Controllers\Api\OrderController@order_by_store');
 Route::get('/orders/orderdet/{mk}','App\Http\Controllers\Api\OrderController@get_det_item_by_mk');
 Route::get('/orders/notifpanel/{store_id}','App\Http\Controllers\Api\OrderController@notif_panel');
+Route::post('/orders/konfirmasi/{id_order}','App\Http\Controllers\Api\OrderController@konfirmasi');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\OrderResource;
 use App\Models\OrderDet;
-
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 class OrderController extends Controller
 {
     //
@@ -121,4 +122,30 @@ class OrderController extends Controller
         //return collection of posts as a resource
         return new OrderResource(true, 'Notif Dashboard', $join_all);
     }
+
+    public function konfirmasi(Request $request, $id_order)
+    {
+        //define validation rules
+        $validator = Validator::make($request->all(), [
+            'flag_ord'     => 'required',
+            'nik_konfirm'     => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $order = Order::select('id_ord','flag_ord','tgl_confirm','u_store')->find($id_order);
+
+        $order->update([
+            'flag_ord'     => $request->flag_ord,
+            'u_store'      => $request->nik_konfirm,
+            'tgl_confirm'      => Carbon::now()->timezone('Asia/Jakarta')->toDateTimeString(),
+        ]);
+        
+        //return response
+        return new OrderResource(true, 'Order Midi Kring Berhasil dikonfirmasi!', $order);
+    }
 }
+
